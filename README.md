@@ -1,4 +1,7 @@
 # Intel Memory Latency Checker command generator and result convert to CSV
+These tools are used for quickly generate or run 
+./mlc --idle_latency -c0 -L -b1m
+A script is also here for a better experience using MLC.
 
 Step 1:
 Download MLC from Intel
@@ -7,7 +10,7 @@ Download MLC from Intel
 ## IF you want to generate command yourself:
 
 Step 2:
-Use command generator
+Use command generator.
 mlc latency.html
 
 Step 3:
