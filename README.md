@@ -12,7 +12,7 @@ mlc latency.html
 
 Step 3:
 Open Powershell in folder that contains mlc.exe, paste the command to run.
-If you want to test different core, paste it into something with a findn`replace such as Notepad, replace -c0 to -c1 or -c8. The count of core starts with 0.
+If you want to test different core, paste it into something with a findn`replace such as Notepad, replace -c0 to -c1 or -c8. The count of cores starts with 0.
 
 Step 4:
 Copy everything in your powershell windows, open mlc latency to csv.html, paste and convert all of the results into a CSV file
@@ -20,6 +20,7 @@ Copy everything in your powershell windows, open mlc latency to csv.html, paste 
 ## IF you want to be lazy: (recommanded)
 Step 2:
 Put that bat file into the folder that contains mlc.exe, then run it.
+If you want to test different core, edit it in something with a findn`replace such as Notepad, replace -c0 to -c1 or -c8. The count of cores starts with 0.
 
 Step 3:
-Find the file after the bat finished at the same folder with mlc.exe in it. Copy paste into mlc latency to csv.html to get csv file.
+Find the file after the bat finished at the same folder with mlc.exe in it. Copy paste the text into mlc latency to csv.html to get csv file.
