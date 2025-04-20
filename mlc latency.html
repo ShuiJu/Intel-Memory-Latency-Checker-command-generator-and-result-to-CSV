@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>MLC 指令生成器</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .input-group {
+            margin-bottom: 20px;
+        }
+        input {
+            padding: 5px;
+            width: 100px;
+            margin-right: 10px;
+        }
+        button {
+            padding: 5px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            min-height: 200px;
+        }
+    </style>
+</head>
+<body>
+    <h1>MLC 指令生成器</h1>
+    <div class="input-group">
+        <input type="number" id="start" placeholder="起始数字">
+        <input type="number" id="end" placeholder="终止数字">
+        <button onclick="generateCommands()">生成指令</button>
+    </div>
+    <div id="result"></div>
+
+    <script>
+        function generateCommands() {
+            const start = parseInt(document.getElementById('start').value);
+            const end = parseInt(document.getElementById('end').value);
+            const result = document.getElementById('result');
+            
+            if (isNaN(start) || isNaN(end)) {
+                result.innerHTML = "请输入有效的数字！";
+                return;
+            }
+
+            if (start > end) {
+                result.innerHTML = "起始数字不能大于终止数字！";
+                return;
+            }
+
+            let commands = [];
+            let current = start;
+
+            while (current <= end) {
+                commands.push(`./mlc --idle_latency -c0 -L -b${current}m`);
+                current = nextValue(current);
+            }
+
+            result.innerHTML = commands.join('<br>');
+        }
+
+        function nextValue(current) {
+            if (current >= 4096) {
+                return current + 128;
+            } else if (current >= 2048) {
+                return current + 64;
+            } else if (current >= 1024) {
+                return current + 32;
+            } else if (current >= 512) {
+                return current + 16;
+            } else if (current >= 256) {
+                return current + 8;
+            } else {
+                return current + 1;
+            }
+        }
+    </script>
+</body>
+</html>

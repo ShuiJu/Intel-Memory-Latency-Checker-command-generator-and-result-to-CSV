@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>MLC 结果处理器</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .input-group {
+            margin-bottom: 20px;
+        }
+        textarea {
+            width: 100%;
+            height: 200px;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        button {
+            padding: 5px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            min-height: 200px;
+        }
+        .download-btn {
+            margin-top: 10px;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <h1>MLC 结果处理器</h1>
+    <div class="input-group">
+        <textarea id="input" placeholder="粘贴MLC命令结果"></textarea>
+        <button onclick="processResults()">生成CSV</button>
+    </div>
+    <div id="result"></div>
+    <div class="download-btn" id="downloadBtn"></div>
+
+    <script>
+        function processResults() {
+            const input = document.getElementById('input').value;
+            const resultDiv = document.getElementById('result');
+            const downloadBtn = document.getElementById('downloadBtn');
+            
+            let lines = input.split('\n');
+            let memSizes = []; // 存储内存大小
+            let latencies = []; // 存储延迟时间
+            let data = [];
+            
+            data.push(['Memory Size (KB)', 'Latency (ns)']);
+            
+            console.log("开始解析结果...");
+            
+            lines.forEach(line => {
+                console.log("当前处理的行:", line);
+                
+                // 提取内存大小
+                let memMatch = line.match(/Using buffer size of (\d+(?:\.\d+)?)MiB/);
+                if (memMatch) {
+                    let memSizeMiB = parseFloat(memMatch[1]);
+                    let memSizeKB = memSizeMiB * 1024;
+                    memSizes.push(memSizeKB);
+                    console.log("提取到内存大小:", memSizeKB.toFixed(0), "KB");
+                }
+                
+                // 提取延迟时间
+                if (line.includes('Each iteration took')) {
+                    // 从括号内提取数字
+                    let latencyExtract = '';
+                    let inParentheses = false;
+                    for (let char of line) {
+                        if (char === '(') {
+                            inParentheses = true;
+                        } else if (char === ')') {
+                            inParentheses = false;
+                        } else if (inParentheses) {
+                            if (/\d|\./.test(char)) {
+                                latencyExtract += char;
+                            }
+                        }
+                    }
+                    if (latencyExtract) {
+                        let latency = parseFloat(latencyExtract);
+                        latencies.push(latency);
+                        console.log("提取到延迟时间:", latency.toFixed(1), "ns");
+                    }
+                }
+            });
+
+            console.log("提取到的内存大小:", memSizes);
+            console.log("提取到的延迟时间:", latencies);
+            
+            for (let i = 0; i < memSizes.length; i++) {
+                if (i < latencies.length) {
+                    data.push([memSizes[i].toFixed(0), latencies[i].toFixed(1)]);
+                } else {
+                    data.push([memSizes[i].toFixed(0), '无']);
+                    console.log("内存大小和延迟时间数量不匹配，第", i+1, "条内存大小没有对应的延迟时间。");
+                }
+            }
+
+            // 生成CSV内容
+            let csvContent = data.map(row => row.join(',')).join('\n');
+            console.log("生成的CSV内容:", csvContent);
+            
+            resultDiv.innerHTML = '<pre>' + csvContent + '</pre>';
+            
+            // 提供下载CSV的选项
+            if (data.length > 1) {
+                let blob = new Blob([csvContent], { type: 'text/csv' });
+                let url = window.URL.createObjectURL(blob);
+                let a = document.createElement('a');
+                a.href = url;
+                a.download = 'mlc_results.csv';
+                a.textContent = '下载CSV文件';
+                downloadBtn.appendChild(a);
+            } else {
+                console.error("未提取到有效数据。");
+                resultDiv.innerHTML = "未提取到有效数据。请检查输入内容是否正确。";
+            }
+        }
+    </script>
+</body>
+</html>
