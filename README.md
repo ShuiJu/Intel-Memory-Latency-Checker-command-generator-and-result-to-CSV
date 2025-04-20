@@ -12,6 +12,7 @@ Download MLC from Intel
 Step 2:
 Use command generator.
 mlc latency.html
+![firefox_0EwqqcdIzA](https://github.com/user-attachments/assets/d965faa1-0c56-4b29-b3f7-31d1d003dbb2)
 
 Step 3:
 Open Powershell in folder that contains mlc.exe, paste the command to run.
