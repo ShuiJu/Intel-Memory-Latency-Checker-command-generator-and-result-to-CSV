@@ -31,3 +31,7 @@ If you want to test different core, edit it in something with a findn`replace su
 
 Step 3:
 Find the file after the bat finished at the same folder with mlc.exe in it. Copy paste the text into mlc latency to csv.html to get csv file.
+
+
+
+![2f413aecf0b79d992e30b2a972a2c606](https://github.com/user-attachments/assets/5bda9d98-a960-45f2-9bb7-6e370ee967cf)
